@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fun Fact des Tages</title>
+<style>
+  :root {
+    --bg1: #e6f4ea; --bg2: #fff6dd; --card: #ffffff; --text: #24312a;
+    --muted: #6b7a70; --tier: #e8833a; --pflanze: #3f9b5c;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg1: #14221a; --bg2: #2a2414; --card: #1f2b24; --text: #eaf2ec; --muted: #9bb0a2; }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; min-height: 100vh; display: flex; align-items: center; justify-content: center;
+    padding: 16px; font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    color: var(--text); background: linear-gradient(135deg, var(--bg1), var(--bg2));
+  }
+  main { width: 100%; max-width: 560px; text-align: center; }
+  h1 { font-size: 1.1rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 0 0 4px; }
+  .datum { color: var(--muted); margin-bottom: 20px; }
+  .karte {
+    background: var(--card); border-radius: 24px; padding: 32px 24px;
+    box-shadow: 0 10px 30px rgba(0,0,0,.12); border-top: 8px solid var(--akzent);
+  }
+  .emoji { font-size: 4.5rem; line-height: 1; }
+  .badge {
+    display: inline-block; margin: 14px 0; padding: 4px 14px; border-radius: 999px;
+    background: var(--akzent); color: #fff; font-weight: 600; font-size: .9rem;
+  }
+  .fakt { font-size: 1.3rem; line-height: 1.5; margin: 0; }
+  footer { margin-top: 18px; color: var(--muted); font-size: .85rem; }
+</style>
+</head>
+<body>
+<main>
+  <h1>🌍 Fun Fact des Tages</h1>
+  <div class="datum" id="datum"></div>
+  <div class="karte" id="karte">
+    <div class="emoji" id="emoji"></div>
+    <div class="badge" id="badge"></div>
+    <p class="fakt" id="fakt"></p>
+  </div>
+  <footer>Jeden Tag ein neuer Fakt – abwechselnd Tier und Pflanze.</footer>
+</main>
+
+<script>
+  const tiere = [
+    ["🐙", "Oktopusse haben drei Herzen und blaues Blut."],
+    ["🐝", "Eine Honigbiene stellt in ihrem ganzen Leben nur etwa einen Teelöffel Honig her."],
+    ["🦩", "Flamingos sind rosa, weil sie Farbstoffe aus Krebstierchen und Algen fressen."],
+    ["🐨", "Wombats produzieren würfelförmigen Kot – so bleibt er liegen und markiert ihr Revier."],
+    ["🐴", "Beim Seepferdchen trägt das Männchen die Jungen in einer Bauchtasche aus."],
+    ["🦒", "Giraffen haben genauso viele Halswirbel wie wir Menschen: sieben."],
+    ["🐬", "Delfine schlafen mit nur einer Gehirnhälfte – die andere bleibt wach."],
+    ["🐦", "Kolibris können als einzige Vögel rückwärts fliegen."],
+    ["🐜", "Eine Ameise kann etwa das 50-Fache ihres eigenen Gewichts tragen."],
+    ["🦉", "Eulen können ihren Kopf um ungefähr 270 Grad drehen."],
+    ["🐄", "Kühe haben beste Freundinnen und sind gestresster, wenn man sie trennt."],
+    ["🦥", "Faultiere klettern nur etwa einmal pro Woche vom Baum – für den Toilettengang."],
+    ["🐧", "Kaiserpinguin-Papas brüten das Ei auf ihren Füßen aus, mitten im antarktischen Winter."],
+    ["🐘", "Elefanten erkennen sich im Spiegel – das können nur sehr wenige Tiere."],
+    ["🐦‍⬛", "Krähen erkennen menschliche Gesichter und merken sich, wer nett zu ihnen war."],
+    ["🪼", "Quallen gibt es seit über 500 Millionen Jahren – und sie kommen ganz ohne Gehirn aus."],
+    ["🦇", "Fledermäuse sind die einzigen Säugetiere, die richtig fliegen können."],
+    ["🦋", "Schmetterlinge schmecken mit ihren Füßen."],
+    ["🦦", "Otter halten beim Schlafen Händchen, damit sie nicht auseinandertreiben."],
+    ["🐋", "Der Blauwal ist mit bis zu 30 Metern das größte Tier, das je auf der Erde gelebt hat."],
+    ["🐱", "Der Nasenabdruck jeder Katze ist einzigartig – wie unser Fingerabdruck."],
+    ["🦎", "Axolotl können verlorene Gliedmaßen komplett nachwachsen lassen."],
+    ["🦎", "Die Zunge eines Chamäleons kann länger sein als sein ganzer Körper."],
+    ["🐠", "Clownfische können ihr Geschlecht wechseln: Aus Männchen werden Weibchen."]
+  ];
+
+  const pflanzen = [
+    ["🎋", "Manche Bambusarten wachsen bis zu 90 Zentimeter an einem einzigen Tag."],
+    ["🌻", "Junge Sonnenblumen drehen ihre Blüten im Lauf des Tages mit der Sonne mit."],
+    ["🍌", "Botanisch ist die Banane eine Beere – die Erdbeere dagegen nicht."],
+    ["🌿", "Die Mimose klappt ihre Blätter zusammen, sobald man sie berührt."],
+    ["🌳", "Bäume tauschen über Pilzgeflechte im Boden Nährstoffe und Warnsignale aus."],
+    ["🌲", "Küsten-Mammutbäume können über 110 Meter hoch werden."],
+    ["🎃", "Auch der Kürbis ist botanisch gesehen eine Beere."],
+    ["🪤", "Die Venusfliegenfalle schnappt erst zu, wenn ihre Fühlhaare kurz hintereinander zweimal berührt werden."],
+    ["🍅", "Tomate und Kartoffel sind Verwandte: Beide gehören zu den Nachtschattengewächsen."],
+    ["🥜", "Die Cashewnuss wächst außen an einer Frucht, dem Cashewapfel."],
+    ["🍂", "Den Ginkgo gibt es schon seit über 200 Millionen Jahren – er hat sogar die Dinosaurier erlebt."],
+    ["🌺", "Mit rund 28.000 Arten sind Orchideen eine der artenreichsten Pflanzenfamilien."],
+    ["🪷", "Die Riesen-Seerose aus dem Amazonas hat Blätter von bis zu drei Metern Durchmesser."],
+    ["🌸", "Die Titanwurz blüht selten und riecht dann nach verwesendem Fleisch, um Fliegen anzulocken."],
+    ["🍎", "Äpfel schwimmen, weil sie etwa ein Viertel Luft enthalten."],
+    ["🌲", "Die ältesten Grannenkiefern sind über 4.800 Jahre alt."],
+    ["🌱", "Gras wächst von unten nach – deshalb überlebt es das Mähen so gut."],
+    ["🌳", "Eine große Eiche verdunstet an einem Sommertag mehrere hundert Liter Wasser."],
+    ["🌹", "Rosen, Äpfel und Mandeln sind Verwandte: Alle gehören zu den Rosengewächsen."],
+    ["🍦", "Vanille ist eine Orchidee – die einzige, die als Gewürz genutzt wird."],
+    ["🪷", "Die Lotusblume ist selbstreinigend: Wasser perlt samt Schmutz einfach ab."],
+    ["🌵", "Ein Saguaro-Kaktus kann über 150 Jahre alt werden."],
+    ["🥦", "Brokkoli, Blumenkohl, Rosenkohl und Kohlrabi stammen alle vom Wildkohl ab."]
+  ];
+
+  // Tage seit 1.1.1970 nach lokalem Datum (wechselt um Mitternacht)
+  const heute = new Date();
+  const tag = Math.floor(Date.UTC(heute.getFullYear(), heute.getMonth(), heute.getDate()) / 86400000);
+
+  // Gerade Tage: Tier, ungerade Tage: Pflanze. Jede Liste läuft der Reihe nach durch.
+  const istTier = tag % 2 === 0;
+  const liste = istTier ? tiere : pflanzen;
+  const [emoji, fakt] = liste[Math.floor(tag / 2) % liste.length];
+
+  document.getElementById("datum").textContent =
+    heute.toLocaleDateString("de-DE", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
+  document.getElementById("emoji").textContent = emoji;
+  document.getElementById("badge").textContent = istTier ? "Tierwelt" : "Pflanzenwelt";
+  document.getElementById("fakt").textContent = fakt;
+  document.getElementById("karte").style.setProperty("--akzent", istTier ? "var(--tier)" : "var(--pflanze)");
+</script>
+</body>
+</html>
